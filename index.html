@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>BRO AI V5.1 - LIVE REAL</title>
+<title>BRO AI V5.2 - LIVE FIX</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
 body{background:#0f1115;color:#fff;padding:10px}
@@ -22,7 +22,7 @@ button{width:100%;padding:14px;margin-top:10px;border:none;border-radius:10px;ba
 </style>
 </head>
 <body>
-<div class="top"><h1>🔥 BRO AI V5.1 - LIVE REAL</h1><p>XAUUSD - HARGA ASLI DUNIA</p><span class="live">● LIVE REAL GOLD</span></div>
+<div class="top"><h1>🔥 BRO AI V5.2 - LIVE REAL</h1><p>XAUUSD - HARGA ASLI DUNIA</p><span class="live">● LIVE REAL GOLD</span></div>
 <div class="bigprice"><div style="font-size:12px;color:#aaa">HARGA GOLD ASLI - LIVE</div><div class="price" id="bigPrice">Loading...</div><div id="status" style="font-size:12px;color:#00ff88">Menghubungkan...</div><div id="lastUpdate" style="font-size:11px;color:#aaa">Update: -</div></div>
 <div class="zones"><div class="zone sellz">SELL<br><span id="sellZone">-</span></div><div class="zone tpz">TP1 <span id="tp1">-</span><br>TP2 <span id="tp2">-</span></div><div class="zone buyz">BUY<br><span id="buyZone">-</span></div></div>
 <div class="calc"><h2 style="text-align:center;color:#ffcc00">🤖 AI KALKULATOR</h2>
@@ -34,19 +34,37 @@ button{width:100%;padding:14px;margin-top:10px;border:none;border-radius:10px;ba
 <div id="hasil"><div id="score" style="font-size:36px;font-weight:bold"></div><div id="txt"></div><div id="rr" style="font-size:12px;color:#aaa"></div></div></div>
 <script>
 let price=3898.53;
-async function getLive(){
- try{
-  let r=await fetch('https://data-asg.goldprice.org/dbXRates/USD');
-  let j=await r.json(); let xau=j.items[0].curr; price=xau;
+function updateUI(xau, src){
+  price=xau;
   document.getElementById('bigPrice').innerText='$'+xau.toFixed(2);
-  document.getElementById('status').innerText='✅ LIVE - Harga Asli';
+  document.getElementById('status').innerText='✅ LIVE - '+src;
   document.getElementById('lastUpdate').innerText='Update: '+new Date().toLocaleTimeString('id-ID');
   document.getElementById('harga').value=xau.toFixed(2);
   document.getElementById('sellZone').innerText=(xau+7).toFixed(2);
   document.getElementById('tp1').innerText=(xau-8).toFixed(2);
   document.getElementById('tp2').innerText=(xau-15).toFixed(2);
   document.getElementById('buyZone').innerText=(xau-18).toFixed(2);
- }catch(e){ document.getElementById('status').innerText='⚠️ Server sibuk, coba lagi...'; }
+}
+async function getLive(){
+  // API 1 - gold-api.com (paling stabil)
+  try{
+    let r=await fetch('https://api.gold-api.com/price/XAU');
+    let j=await r.json();
+    if(j.price){ updateUI(j.price,'Gold-API LIVE'); return; }
+  }catch(e){}
+  // API 2 - goldprice.org
+  try{
+    let r=await fetch('https://data-asg.goldprice.org/dbXRates/USD');
+    let j=await r.json(); let xau=j.items[0].curr;
+    if(xau){ updateUI(xau,'GoldPrice.org LIVE'); return; }
+  }catch(e){}
+  // API 3 - metals live via proxy
+  try{
+    let r=await fetch('https://api.metals.live/v1/spot?metals=gold&currency=USD');
+    let j=await r.json();
+    if(j && j[0] && j[0].price){ updateUI(j[0].price,'Metals LIVE'); return; }
+  }catch(e){}
+  document.getElementById('status').innerText='⚠️ Cek internet lu bro, retry...';
 }
 function pakaiLive(){ document.getElementById('harga').value=price.toFixed(2); alert('Harga live '+price.toFixed(2)+' udah keisi bro!'); }
 function cek(){
@@ -65,4 +83,4 @@ function cek(){
 getLive(); setInterval(getLive,10000);
 </script>
 </body>
-  </html>
+                                                                                                                                           </html>
