@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BRO AI V5.1 - LIVE REAL</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
+body{background:#0f1115;color:#fff;padding:10px}
+.top{background:#1a1d24;padding:12px;border-radius:12px;text-align:center;border:2px solid #00ff88}
+.top h1{font-size:20px;color:#00ff88}
+.live{display:inline-block;background:red;color:#fff;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:bold;margin-top:6px}
+.bigprice{background:#131722;border-radius:12px;margin-top:10px;padding:16px;text-align:center;border:1px solid #ffcc00}
+.bigprice .price{font-size:38px;font-weight:bold;color:#ffcc00}
+.zones{display:flex;gap:8px;margin-top:10px}
+.zone{flex:1;padding:10px;border-radius:10px;text-align:center;font-size:12px;font-weight:bold}
+.sellz{background:#ff3b3b}.tpz{background:#00c853}.buyz{background:#2962ff}
+.calc{background:#1a1d24;padding:14px;border-radius:12px;margin-top:10px}
+input{width:100%;padding:12px;margin-top:8px;border-radius:8px;border:1px solid #444;background:#0f1115;color:#fff;font-size:16px;text-align:center}
+button{width:100%;padding:14px;margin-top:10px;border:none;border-radius:10px;background:#00ff88;color:#000;font-weight:bold;font-size:16px}
+#hasil{margin-top:10px;padding:12px;border-radius:10px;background:#0f1115;text-align:center;display:none}
+</style>
+</head>
+<body>
+<div class="top"><h1>🔥 BRO AI V5.1 - LIVE REAL</h1><p>XAUUSD - HARGA ASLI DUNIA</p><span class="live">● LIVE REAL GOLD</span></div>
+<div class="bigprice"><div style="font-size:12px;color:#aaa">HARGA GOLD ASLI - LIVE</div><div class="price" id="bigPrice">Loading...</div><div id="status" style="font-size:12px;color:#00ff88">Menghubungkan...</div><div id="lastUpdate" style="font-size:11px;color:#aaa">Update: -</div></div>
+<div class="zones"><div class="zone sellz">SELL<br><span id="sellZone">-</span></div><div class="zone tpz">TP1 <span id="tp1">-</span><br>TP2 <span id="tp2">-</span></div><div class="zone buyz">BUY<br><span id="buyZone">-</span></div></div>
+<div class="calc"><h2 style="text-align:center;color:#ffcc00">🤖 AI KALKULATOR</h2>
+<input id="harga" type="number" placeholder="Otomatis keisi harga live">
+<input id="tp" type="number" placeholder="TP Lu - cth 3890">
+<input id="sl" type="number" placeholder="SL Lu - cth 3910">
+<button onclick="cek()">CEK AI - GAS / WAIT?</button>
+<button onclick="pakaiLive()" style="background:#ffcc00">PAKAI HARGA LIVE SEKARANG</button>
+<div id="hasil"><div id="score" style="font-size:36px;font-weight:bold"></div><div id="txt"></div><div id="rr" style="font-size:12px;color:#aaa"></div></div></div>
+<script>
+let price=3898.53;
+async function getLive(){
+ try{
+  let r=await fetch('https://data-asg.goldprice.org/dbXRates/USD');
+  let j=await r.json(); let xau=j.items[0].curr; price=xau;
+  document.getElementById('bigPrice').innerText='$'+xau.toFixed(2);
+  document.getElementById('status').innerText='✅ LIVE - Harga Asli';
+  document.getElementById('lastUpdate').innerText='Update: '+new Date().toLocaleTimeString('id-ID');
+  document.getElementById('harga').value=xau.toFixed(2);
+  document.getElementById('sellZone').innerText=(xau+7).toFixed(2);
+  document.getElementById('tp1').innerText=(xau-8).toFixed(2);
+  document.getElementById('tp2').innerText=(xau-15).toFixed(2);
+  document.getElementById('buyZone').innerText=(xau-18).toFixed(2);
+ }catch(e){ document.getElementById('status').innerText='⚠️ Server sibuk, coba lagi...'; }
+}
+function pakaiLive(){ document.getElementById('harga').value=price.toFixed(2); alert('Harga live '+price.toFixed(2)+' udah keisi bro!'); }
+function cek(){
+ let h=parseFloat(document.getElementById('harga').value)||price;
+ let tp=parseFloat(document.getElementById('tp').value);
+ let sl=parseFloat(document.getElementById('sl').value);
+ if(!tp||!sl){alert('Isi TP & SL dulu bro!');return;}
+ let profit=Math.abs(tp-h), loss=Math.abs(sl-h); let rr=profit/loss;
+ let score=Math.round(Math.min(95, 30 + rr*45 + (Math.random()*10)));
+ let el=document.getElementById('hasil'); el.style.display='block';
+ document.getElementById('score').innerText=score;
+ document.getElementById('score').style.color=score>=70?'#00ff88':score>=50?'#ffcc00':'#ff3b3b';
+ document.getElementById('txt').innerText=score>=70?'✅ GAS!':score>=50?'⚠️ GAS TIPIS':'❌ JANGAN ENTRY';
+ document.getElementById('rr').innerText='RR: '+rr.toFixed(2)+' | Profit: '+profit.toFixed(2)+' | Resiko: '+loss.toFixed(2);
+}
+getLive(); setInterval(getLive,10000);
+</script>
+</body>
+  </html>
